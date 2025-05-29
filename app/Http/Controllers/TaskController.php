@@ -44,10 +44,16 @@ class TaskController extends Controller
         ]);
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Task  $task
+     * @return \Illuminate\Http\Response
+     */
     public function show(Task $task)
     {
-        // Check if the task belongs to the authenticated user
-        if ($task->user_id !== Auth::id()) {
+        // Check if user is the owner or a collaborator
+        if ($task->user_id !== Auth::id() && !$task->collaborators->contains(Auth::id())) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthorized access'
@@ -60,10 +66,17 @@ class TaskController extends Controller
         ]);
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Task  $task
+     * @return \Illuminate\Http\Response
+     */
     public function update(Request $request, Task $task)
     {
-        // Check if the task belongs to the authenticated user
-        if ($task->user_id !== Auth::id()) {
+        // Check if user is the owner or a collaborator
+        if ($task->user_id !== Auth::id() && !$task->collaborators->contains(Auth::id())) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthorized access'
@@ -90,10 +103,16 @@ class TaskController extends Controller
         ]);
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Task  $task
+     * @return \Illuminate\Http\Response
+     */
     public function destroy(Task $task)
     {
-        // Check if the task belongs to the authenticated user
-        if ($task->user_id !== Auth::id()) {
+        // Check if user is the owner or a collaborator
+        if ($task->user_id !== Auth::id() && !$task->collaborators->contains(Auth::id())) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthorized access'

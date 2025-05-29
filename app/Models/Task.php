@@ -21,9 +21,15 @@ class Task extends Model
         'user_id'
     ];
 
-    // Relationship with User
+    // Relationship with User (owner)
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // Relationship with collaborators
+    public function collaborators()
+    {
+        return $this->belongsToMany(User::class, 'task_collaborators');
     }
 }

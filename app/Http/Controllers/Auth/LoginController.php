@@ -8,11 +8,16 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
     public function __construct()
     {
-        // Middleware should be defined in the routes file, not in the controller
+        // Remove the middleware from the constructor
     }
-    
+
     public function showLoginForm()
     {
         return view('auth.login');
@@ -21,13 +26,15 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->validate([
-            'username' => ['required', 'string'],
+            'username' => ['required'],
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended('/home');
+            
+            // Remove admin check and redirect to home for all users
+            return redirect('/home');
         }
 
         return back()->withErrors([
