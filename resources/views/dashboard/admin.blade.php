@@ -63,10 +63,13 @@
 
         .modal {
             display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .modal.show {
             display: flex;
+            opacity: 1;
         }
 
         .tab-button {
@@ -214,7 +217,7 @@
                                 @forelse($recentTasks as $task)
                                 <tr class="hover:bg-slate-700 hover:bg-opacity-30">
                                     <td class="px-4 py-4 text-sm" style="color: var(--text-primary);">{{ $task->user->name }}</td>
-                                    <td class="px-4 py-4 text-sm" style="color: var(--text-primary);">{{ $task->name }}</td>
+                                    <td class="px-4 py-4 text-sm" style="color: var(--text-primary); max-width: 200px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word;">{{ $task->name }}</td>
                                     <td class="px-4 py-4">
                                         <span class="px-2 py-1 text-xs rounded-full {{ $task->status_color }} bg-opacity-20">
                                             {{ ucfirst(str_replace('_', ' ', $task->status)) }}
@@ -292,7 +295,7 @@
         <div class="glass-effect rounded-2xl p-8 max-w-md w-full mx-4">
             <div class="flex justify-between items-center mb-6">
                 <h3 class="text-xl font-bold" style="color: var(--text-primary);">Add Task for User</h3>
-                <button id="closeTaskModalBtn" class="text-gray-400 hover:text-white">
+                <button onclick="closeTaskModal()" class="text-gray-400 hover:text-white">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
@@ -307,7 +310,7 @@
                             style="color: var(--text-primary);">
                         <option value="">Choose a user...</option>
                         @foreach($users as $user)
-                            <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->username }})</option>
+                            <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->username }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -366,7 +369,7 @@
                     <button type="submit" class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200">
                         Create Task
                     </button>
-                    <button type="button" id="cancelTaskBtn" class="flex-1 glass-effect hover:bg-slate-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200">
+                    <button type="button" onclick="closeTaskModal()" class="flex-1 glass-effect hover:bg-slate-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200">
                         Cancel
                     </button>
                 </div>
@@ -459,24 +462,10 @@
                 }
             });
 
-            // Set up modal event listeners with direct approach
-            const taskModal = document.getElementById('taskModal');
-            const closeTaskModalBtns = document.querySelectorAll('#closeTaskModalBtn');
-
-            // Simple direct event listeners for all close buttons
-            closeTaskModalBtns.forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('Close button clicked');
-                    closeTaskModal();
-                });
-            });
-
             // Close modal when clicking outside
+            const taskModal = document.getElementById('taskModal');
             taskModal.addEventListener('click', function(e) {
                 if (e.target === taskModal) {
-                    console.log('Clicked outside modal');
                     closeTaskModal();
                 }
             });
@@ -484,7 +473,6 @@
             // Close modal with Escape key
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && taskModal.classList.contains('show')) {
-                    console.log('Escape key pressed');
                     closeTaskModal();
                 }
             });
@@ -505,46 +493,59 @@
             event.target.classList.add('active');
         }
 
-        // Modal functions - Simplified
+        // Modal functions
         function openTaskModal() {
-            console.log('Opening modal');
             const modal = document.getElementById('taskModal');
-            const form = document.getElementById('taskForm');
-            
-            // Reset state
-            isEditMode = false;
-            currentTaskId = null;
-            
-            modal.classList.add('show');
-            form.reset();
-            
-            // Set title for add mode
-            const titleElement = modal.querySelector('h3');
-            if (titleElement) {
-                titleElement.textContent = 'Add Task for User';
-            }
-            
-            setTimeout(() => {
-                const userIdField = document.getElementById('taskUserId');
-                if (userIdField) {
-                    userIdField.focus();
+            if (modal) {
+                modal.classList.add('show');
+                modal.style.display = 'flex';
+                
+                // Reset state
+                isEditMode = false;
+                currentTaskId = null;
+                
+                // Reset form
+                const form = document.getElementById('taskForm');
+                if (form) {
+                    form.reset();
                 }
-            }, 100);
+                
+                // Set title for add mode
+                const titleElement = modal.querySelector('h3');
+                if (titleElement) {
+                    titleElement.textContent = 'Add Task for User';
+                }
+                
+                // Focus on first field
+                setTimeout(() => {
+                    const userIdField = document.getElementById('taskUserId');
+                    if (userIdField) {
+                        userIdField.focus();
+                    }
+                }, 100);
+            }
         }
 
         function closeTaskModal() {
-            console.log('Closing modal');
             const modal = document.getElementById('taskModal');
-            const form = document.getElementById('taskForm');
-            
-            modal.classList.remove('show');
-            form.reset();
-            
-            // Reset state
-            isEditMode = false;
-            currentTaskId = null;
-            
-            console.log('Modal closed successfully');
+            if (modal) {
+                modal.classList.remove('show');
+                
+                // Add slight delay before hiding to allow transition
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
+                
+                // Reset form
+                const form = document.getElementById('taskForm');
+                if (form) {
+                    form.reset();
+                }
+                
+                // Reset state
+                isEditMode = false;
+                currentTaskId = null;
+            }
         }
 
         // Admin functions
@@ -615,8 +616,10 @@
                 }
                 
                 // Show modal
+                modal.style.display = 'flex';
                 modal.classList.add('show');
                 
+                // Focus on first field
                 setTimeout(() => {
                     document.getElementById('taskName').focus();
                 }, 100);

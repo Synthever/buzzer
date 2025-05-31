@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Dashboard - BuzzIn</title>
+    <!-- icon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='url(%23grad)'/>%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%233b82f6'/%3E%3Cstop offset='100%25' style='stop-color:%236366f1'/%3E%3C/linearGradient%3E%3C/defs%3E<text x='16' y='22' text-anchor='middle' fill='white' font-family='Arial, sans-serif' font-size='18' font-weight='bold'>B</text></svg>" type="image/svg+xml">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -213,8 +215,8 @@
                             @forelse($tasks as $task)
                             <tr class="hover:bg-slate-700 hover:bg-opacity-30 transition-colors">
                                 <td class="px-6 py-4 whitespace-nowrap text-sm" style="color: var(--text-primary);">{{ $loop->iteration }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <div class="text-sm font-medium" style="color: var(--text-primary);">{{ $task->name }}</div>
+                                <td class="px-6 py-4">
+                                    <div class="text-sm font-medium" style="color: var(--text-primary); max-width: 200px; overflow-wrap: break-word; word-wrap: break-word; word-break: break-word;">{{ $task->name }}</div>
                                     @if($task->user_id !== Auth::id())
                                         <div class="text-xs" style="color: var(--text-secondary);">by {{ $task->user->name }}</div>
                                     @endif

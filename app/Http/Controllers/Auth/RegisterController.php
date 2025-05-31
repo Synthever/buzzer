@@ -58,6 +58,9 @@ class RegisterController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'email_verified_at' => now(),
+            'is_admin' => 0, // Default to false, can be changed later
+            'role' => 'user' // Default role
         ]);
 
         Auth::login($user);

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>In Progress Tasks - BuzzIn</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='url(%23grad)'/>%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%233b82f6'/%3E%3Cstop offset='100%25' style='stop-color:%236366f1'/%3E%3C/linearGradient%3E%3C/defs%3E<text x='16' y='22' text-anchor='middle' fill='white' font-family='Arial, sans-serif' font-size='18' font-weight='bold'>B</text></svg>" type="image/svg+xml">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -390,11 +391,11 @@
                         <div class="glass-effect rounded-lg p-4">
                             <h4 class="text-sm font-medium mb-2" style="color: var(--text-secondary);">Progress</h4>
                             <div class="flex items-center space-x-3">
-                                <span style="color: var(--text-primary);">${task.filled_slot}/${task.total_slot}</span>
+                                <span style="color: var(--text-primary);">{{ $task->filled_slot }}/{{ $task->total_slot }}</span>
                                 <div class="flex-1 bg-gray-600 rounded-full h-3">
-                                    <div class="h-3 rounded-full bg-blue-500" style="width: ${task.progress_percentage}%"></div>
+                                    <div class="h-3 rounded-full bg-blue-500" style="width: {{ $task->progress_percentage }}%"></div>
                                 </div>
-                                <span class="text-sm" style="color: var(--text-secondary);">${task.progress_percentage}%</span>
+                                <span class="text-sm" style="color: var(--text-secondary);">{{ $task->progress_percentage }}%</span>
                             </div>
                         </div>
                         
