@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login - BuzzIn</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Anime.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border: #475569;
+            --glass-bg: rgba(30, 41, 59, 0.6);
+            --glass-border: rgba(71, 85, 105, 0.3);
+        }
+
+        .glass-effect {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .glass-effect:hover {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(71, 85, 105, 0.5);
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(59, 130, 246, 0.3), rgba(99, 102, 241, 0.2));
+        }
+        
+        /* Remove initial transforms for smoother animations */
+        .login-form {
+            opacity: 0;
+        }
+        
+        .form-field {
+            opacity: 0;
+        }
+        
+        .login-button {
+            opacity: 0;
+        }
+        
+        .nav-item {
+            opacity: 0;
+        }
+        
+        .nav-buttons {
+            opacity: 0;
+        }
+        
+        .form-title {
+            opacity: 0;
+        }
+        
+        .form-subtitle {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);">
+    <!-- Navigation Bar -->
+    <nav class="bg-gradient-to-r from-slate-800 to-slate-900 shadow-xl relative z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <!-- Logo -->
+                <div class="flex items-center nav-item">
+                    <a href="{{ route('home') }}" class="flex items-center group">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                            <span class="text-white font-bold text-sm">B</span>
+                        </div>
+                        <span class="ml-3 text-xl font-semibold" style="color: var(--text-primary);">BuzzIn</span>
+                    </a>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="flex items-center space-x-4 nav-buttons">
+                    <a href="{{ route('home') }}" class="hover:text-blue-400 transition duration-300" style="color: var(--text-secondary);">
+                        Home
+                    </a>
+                    <a href="{{ route('register') }}" class="glass-effect hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 transform hover:scale-105">
+                        Register
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <div class="min-h-screen flex items-center justify-center relative overflow-hidden py-12">
+        <!-- Floating Elements Background -->
+        <div class="floating-elements">
+            <div class="floating-circle" style="width: 150px; height: 150px; top: 15%; left: 10%;"></div>
+            <div class="floating-circle" style="width: 200px; height: 200px; top: 70%; left: 85%;"></div>
+            <div class="floating-circle" style="width: 100px; height: 100px; top: 30%; left: 80%;"></div>
+        </div>
+
+        <!-- Login Form Container -->
+        <div class="max-w-md w-full mx-6 relative z-10">
+            <div class="login-form glass-effect rounded-2xl p-8">
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <h2 class="form-title text-3xl font-bold mb-2" style="color: var(--text-primary);">Welcome back</h2>
+                    <p class="form-subtitle" style="color: var(--text-secondary);">Sign in to your BuzzIn account</p>
+                </div>
+
+                <!-- Login Form -->
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
+
+                    <!-- Username Field -->
+                    <div class="mb-6 form-field">
+                        <label for="username" class="block text-sm font-medium mb-2" style="color: var(--text-primary);">
+                            Username
+                        </label>
+                        <input id="username" type="text" 
+                            class="w-full px-4 py-3 rounded-lg glass-effect focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-200 @error('username') ring-2 ring-red-500 @enderror" 
+                            style="color: var(--text-primary);"
+                            name="username" 
+                            value="{{ old('username') }}" 
+                            required 
+                            autocomplete="username" 
+                            autofocus
+                            placeholder="Enter your username">
+                        @error('username')
+                            <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="mb-6 form-field">
+                        <label for="password" class="block text-sm font-medium mb-2" style="color: var(--text-primary);">
+                            Password
+                        </label>
+                        <input id="password" type="password" 
+                            class="w-full px-4 py-3 rounded-lg glass-effect focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-200 @error('password') ring-2 ring-red-500 @enderror" 
+                            style="color: var(--text-primary);"
+                            name="password" 
+                            required 
+                            autocomplete="current-password"
+                            placeholder="Enter your password">
+                        @error('password')
+                            <p class="mt-2 text-sm text-red-400">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Remember Me -->
+                    <div class="mb-6 form-field">
+                        <label class="flex items-center">
+                            <input type="checkbox" name="remember" id="remember" 
+                                class="w-4 h-4 text-blue-600 bg-transparent border-gray-400 rounded focus:ring-blue-500 focus:ring-2"
+                                {{ old('remember') ? 'checked' : '' }}>
+                            <span class="ml-2 text-sm" style="color: var(--text-secondary);">Remember me</span>
+                        </label>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="mb-6">
+                        <button type="submit" 
+                                class="login-button w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            Sign In
+                        </button>
+                    </div>
+
+                    <!-- Links -->
+                    <div class="text-center space-y-3 form-field">
+                        <div class="text-sm" style="color: var(--text-secondary);">
+                            Don't have an account? 
+                            <a href="{{ route('register') }}" class="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200">
+                                Sign up here
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Improved smooth intro animation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create main timeline
+            const mainTimeline = anime.timeline({
+                easing: 'easeOutCubic',
+                autoplay: true
+            });
+
+            // Start with floating elements
+            mainTimeline.add({
+                targets: '.floating-elements',
+                opacity: [0, 1],
+                duration: 800,
+                easing: 'easeInOutQuad'
+            })
+            
+            // Navigation animation
+            .add({
+                targets: '.nav-item',
+                opacity: [0, 1],
+                translateX: [-30, 0],
+                duration: 600,
+                easing: 'easeOutExpo'
+            }, 200)
+            
+            .add({
+                targets: '.nav-buttons a',
+                opacity: [0, 1],
+                translateY: [-20, 0],
+                delay: anime.stagger(100),
+                duration: 500,
+                easing: 'easeOutExpo'
+            }, 300)
+            
+            // Main form container
+            .add({
+                targets: '.login-form',
+                opacity: [0, 1],
+                translateY: [40, 0],
+                scale: [0.9, 1],
+                duration: 800,
+                easing: 'easeOutBack'
+            }, 400)
+            
+            // Form header
+            .add({
+                targets: '.form-title',
+                opacity: [0, 1],
+                translateY: [20, 0],
+                duration: 600,
+                easing: 'easeOutExpo'
+            }, 600)
+            
+            .add({
+                targets: '.form-subtitle',
+                opacity: [0, 1],
+                translateY: [15, 0],
+                duration: 500,
+                easing: 'easeOutExpo'
+            }, 700)
+            
+            // Form fields with stagger
+            .add({
+                targets: '.form-field',
+                opacity: [0, 1],
+                translateY: [20, 0],
+                delay: anime.stagger(120),
+                duration: 600,
+                easing: 'easeOutExpo'
+            }, 800)
+            
+            // Submit button
+            .add({
+                targets: '.login-button',
+                opacity: [0, 1],
+                scale: [0.8, 1],
+                duration: 500,
+                easing: 'easeOutBack'
+            }, 1000);
+
+            // Continuous floating circles animation
+            anime({
+                targets: '.floating-circle',
+                translateY: [
+                    { value: -15, duration: 3000 },
+                    { value: 15, duration: 3000 }
+                ],
+                translateX: [
+                    { value: 10, duration: 2500 },
+                    { value: -10, duration: 2500 }
+                ],
+                rotate: [
+                    { value: 360, duration: 8000 }
+                ],
+                loop: true,
+                direction: 'alternate',
+                easing: 'easeInOutSine',
+                delay: anime.stagger(800)
+            });
+        });
+
+        // Input focus animations
+        document.querySelectorAll('input[type="text"], input[type="password"]').forEach(input => {
+            input.addEventListener('focus', () => {
+                anime({
+                    targets: input,
+                    scale: [1, 1.02],
+                    duration: 200,
+                    easing: 'easeOutCubic'
+                });
+            });
+            
+            input.addEventListener('blur', () => {
+                anime({
+                    targets: input,
+                    scale: [1.02, 1],
+                    duration: 200,
+                    easing: 'easeOutCubic'
+                });
+            });
+        });
+
+        // Button hover animations
+        document.querySelector('.login-button').addEventListener('mouseenter', function() {
+            anime({
+                targets: this,
+                scale: [1, 1.05],
+                duration: 200,
+                easing: 'easeOutCubic'
+            });
+        });
+
+        document.querySelector('.login-button').addEventListener('mouseleave', function() {
+            anime({
+                targets: this,
+                scale: [1.05, 1],
+                duration: 200,
+                easing: 'easeOutCubic'
+            });
+        });
+    </script>
+</body>
+</html>
